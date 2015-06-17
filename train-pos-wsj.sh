@@ -17,4 +17,4 @@ hinge="--use-hinge-loss=false"
 save="--save-model=true"
 model="--model=$MODELNAME"
 
-java -classpath lib/factorie-1.0-SNAPSHOT.jar:$FAC_CP -Xmx$MEMORY cc.factorie.app.nlp.pos.ForwardPosTrainer --wsj $train $test $l1 $l2 $rate $delta $cutoff $hinge $save $model
+java -classpath `cat CP.hack` -Xmx$MEMORY cc.factorie.app.nlp.pos.ForwardPosTrainer --wsj $train $test $l1 $l2 $rate $delta $cutoff $hinge $save $model
