@@ -1,30 +1,32 @@
 #!/bin/bash
-# get_classpath.sh
-#
+# get_classpaths.sh
+
+PROJ_ROOT=$FACTORIE_ROOT
 
 # If the root directory is not passed as an environment variable, set it to 
-# the same dir as this script.
-if [ -z "$FACTORIE_ROOT" ]
+# the current directory.
+if [ -z "$PROJ_ROOT" ]
 then
-  TAC_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  PROJ_ROOT=`pwd`
 fi
+
+echo "PROJ_ROOT: "$PROJ_ROOT
 
 # Get classpath: all jar files from maven -- either from a file CP.hack, or 
 # if this file does not exist yet, from the output of a maven compile.
 # TODO: there should be a nice and automated way for starting after building -
 # for now, this hack attempts that, somehow.
-if [ ! -f "CP.hack" ]
+if [ ! -f "$PROJ_ROOT/CP.hack" ]
 then
- echo 'CP.hack does not exist, getting classpath...'
- cd $FACTORIE_ROOT
+ echo 'CP.hack does not exist, get class paths ...'
+ cd $PROJ_ROOT
  mvn compile -X \
  | grep 'classpathElements = ' \
  | sed 's#^.* classpathElements = \[\(.*\)\]$#\1#g' \
  | sed 's#, #:#g' \
  | head -1 \
- > CP.hack
+ > $PROJ_ROOT/CP.hack
  cd -
- mv $FACTORIE_ROOT/CP.hack .
  echo '... done'
 fi
 
