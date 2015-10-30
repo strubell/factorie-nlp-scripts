@@ -1,6 +1,10 @@
 #!/bin/bash
 #
-# Run the ConllChainNER hyperparameter optimizer
-#
 
-java -classpath lib/factorie-1.0-SNAPSHOT.jar:$FAC_CP cc.factorie.app.nlp.parse.BasicConllNerOptimizer
+MEMORY=2g
+
+train="--train=/iesl/data/conll/2003/eng.train"
+test="--test=/iesl/data/conll/2003/eng.testa"
+brown="--brown=/iesl/canvas/strubell/data/brownBllipClusters"
+
+java -classpath `cat CP.hack` -Xmx$MEMORY cc.factorie.app.nlp.ner.ConllNerOptimizer $train $test $brown

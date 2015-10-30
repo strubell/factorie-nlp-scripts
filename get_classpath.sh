@@ -2,12 +2,13 @@
 # get_classpaths.sh
 
 PROJ_ROOT=$FACTORIE_ROOT
+START_DIR=`pwd`
 
 # If the root directory is not passed as an environment variable, set it to 
 # the current directory.
 if [ -z "$PROJ_ROOT" ]
 then
-  PROJ_ROOT=`pwd`
+  PROJ_ROOT=$START_DIR
 fi
 
 echo "PROJ_ROOT: "$PROJ_ROOT
@@ -16,16 +17,16 @@ echo "PROJ_ROOT: "$PROJ_ROOT
 # if this file does not exist yet, from the output of a maven compile.
 # TODO: there should be a nice and automated way for starting after building -
 # for now, this hack attempts that, somehow.
-if [ ! -f "$PROJ_ROOT/CP.hack" ]
+if [ ! -f "$START_DIR/CP.hack" ]
 then
  echo 'CP.hack does not exist, get class paths ...'
  cd $PROJ_ROOT
- mvn compile -X \
+ mvn -X -Dmaven.test.skip=true compile -Pnlp-jar-with-dependencies \
  | grep 'classpathElements = ' \
  | sed 's#^.* classpathElements = \[\(.*\)\]$#\1#g' \
  | sed 's#, #:#g' \
  | head -1 \
- > $PROJ_ROOT/CP.hack
+ > $START_DIR/CP.hack
  cd -
  echo '... done'
 fi
